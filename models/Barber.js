@@ -27,13 +27,32 @@ const barberSchema = new mongoose.Schema({
   shopImageUrl: {
     type: String,
   },
-  services: [{
+  category: {
     type: String,
-  }],
-  haircutPrice: {
-    type: Number,
+    enum: ['Barber', 'Hair Salon', 'Skin Care', 'Massage', 'Nails', 'Makeup', 'Spa', 'Other'],
+    default: 'Barber',
     required: true,
   },
+  services: [{
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    duration: { type: Number, default: 30 }, // in minutes
+    description: String,
+    imageUrl: String,
+  }],
+  staff: [{
+    name: { type: String, required: true },
+    role: { type: String, default: 'Staff' },
+    imageUrl: String,
+    bio: String,
+    workingDays: [String], // ['Mon', 'Tue', ...]
+    shifts: [{
+      day: String,
+      start: String,
+      end: String
+    }]
+  }],
+  gallery: [String],
   rating: {
     type: Number,
     default: 0,
@@ -58,7 +77,10 @@ const barberSchema = new mongoose.Schema({
     type: String,
   },
   workingHours: [{
-    type: String,
+    day: String,
+    start: String,
+    end: String,
+    isOpen: { type: Boolean, default: true }
   }],
 }, {
   timestamps: true,

@@ -79,7 +79,7 @@ router.post('/', authenticateToken, [
       });
     }
 
-    const { barberId, serviceName, bookingDate, bookingTime } = req.body;
+    const { barberId, serviceName, price, bookingDate, bookingTime } = req.body;
 
     // Get barber details
     const barber = await Barber.findById(barberId).populate('userId', 'name email phoneNumber');
@@ -120,7 +120,7 @@ router.post('/', authenticateToken, [
       serviceName,
       bookingDate: new Date(bookingDate),
       bookingTime: new Date(bookingTime),
-      price: barber.haircutPrice,
+      price: price || barber.haircutPrice,
       status: 'pending',
       queuePosition,
     });
