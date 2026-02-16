@@ -31,7 +31,8 @@ router.get('/user/:userId', authenticateToken, async (req, res) => {
 
     const bookings = await Booking.find({ customerId: req.params.userId })
       .sort({ createdAt: -1 })
-      .populate('barberId', 'shopName location services haircutPrice');
+      .populate('barberId', 'shopName location services haircutPrice')
+      .populate('paymentId');
     
     res.json({ success: true, bookings });
   } catch (error) {
@@ -55,7 +56,8 @@ router.get('/barber/:barberId', authenticateToken, async (req, res) => {
 
     const bookings = await Booking.find(query)
       .sort({ bookingDate: 1, bookingTime: 1 })
-      .populate('customerId', 'name email phoneNumber');
+      .populate('customerId', 'name email phoneNumber')
+      .populate('paymentId');
     
     res.json({ success: true, bookings });
   } catch (error) {

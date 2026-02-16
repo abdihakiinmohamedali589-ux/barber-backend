@@ -30,10 +30,26 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
+  console.log('📁 Received file metadata:', {
+    fieldname: file.fieldname,
+    originalname: file.originalname,
+    mimetype: file.mimetype
+  });
+
+  if (file.mimetype && file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb(new Error('Not an image! Please upload an image.'), false);
+    // Fallback: check extension if mimetype is generic or missing
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    
+    if (allowedExtensions.includes(ext)) {
+      console.log(`✅ Accepted file based on extension: ${ext}`);
+      cb(null, true);
+    } else {
+      console.error(`❌ Rejected file. Mimetype: ${file.mimetype}, Extension: ${ext}`);
+      cb(new Error('Not an image! Please upload an image.'), false);
+    }
   }
 };
 
